@@ -40,20 +40,67 @@ local function round(_num)
 	return number <= 0 and floor(number) or floor(number + 0.5);
 end
 
+local function calculateRotation(x1,y1,x2,y2)
+    local delta_x = x2 - x1
+    local delta_y = y2 - y1
+    local radians = math.atan2(delta_y, delta_x)
+    return(math.deg(radians))
+end
+
+---
+-- return what direction the target is at
+--
+local function degreeTrack(playerX,playerY,targetX,targetY)
+    Pointer = "NULL"
+    local rotation = calculateRotation(playerX,playerY,targetX,targetY)
+
+    --POSITIVE DEGREES
+    if rotation > -22.5 and rotation < 22.5 then
+        Pointer = "WEST"
+    end
+    if rotation > 22.5 and rotation < 67.5 then
+        Pointer = "NORTH_WEST"
+    end
+    if rotation > 67.5 and rotation < 112.5 then
+        Pointer = "NORTH"
+    end
+    if rotation > 112.5 and rotation < 157.5 then
+        Pointer = "NORTH-EAST"
+    end
+    if rotation > 157.5 and rotation <= 180 then
+        Pointer = "EAST"
+    end
+
+    --NEGATIVE DEGREES
+    if rotation < -22.5 and rotation > -67.5 then
+        Pointer = "SOUTH-WEST"
+    end
+    if rotation < -67.5 and rotation > -112.5 then
+        Pointer = "SOUTH"
+    end
+    if rotation < -112.5 and rotation > -157.5 then
+        Pointer = "SOUTH-EAST"
+    end
+    if rotation < -157.5 and rotation > -180 then
+        Pointer = "EAST"
+    end
+    return Pointer;
+end
+
 ---
 -- Creates a small overlay UI that shows debug info if the
 -- [ key is pressed.
 local function showUI()
 	local player = getSpecificPlayer(0);
-	-- local target = getSpecificPlayer(1)
+	local target = getSpecificPlayer(1)
 
 	if player and flag then
 		-- Absolute Coordinates.
 		local absX = player:getX();
 		local absY = player:getY();
 
-		local targetX = 100 --target:getX()
-		local targetY = 100 --target:getX()
+		local targetX = target:getX()
+		local targetY = target:getX()
 	
 		-- Detect room.
 		local room = player:getCurrentSquare():getRoom();
@@ -81,7 +128,7 @@ local function showUI()
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 
-		--[[
+		
 		local targetRoomName = target:getCurrentSquare():getRoom();
 		local targetRoomTxt;
 		if targetRoomName then
@@ -90,7 +137,7 @@ local function showUI()
 		else
 			targetRoomTxt = "outside";
 		end
-		]]
+		
 
 		local targetstrings = {
 			"Your target is here:",
@@ -99,7 +146,7 @@ local function showUI()
 			"",
 			"",
 			"Current Room: ",
-			"" .. roomTxt--targetRoomTxt,
+			"" .. targetRoomTxt,
 		};
 
 		local targettxt;
@@ -107,11 +154,10 @@ local function showUI()
 			targettxt = targetstrings[i];
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), targettxt, 1, 1, 1, 1);
 		end
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), targettxt, 1, 1, 1, 1);
+		local direction = "Your target is " .. degreeTrack(absX,absY,targetX,targetY)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, direction, 1, 1, 1, 1);
 	end
 end
 
 Events.OnKeyPressed.Add(checkKey);
 Events.OnPostUIDraw.Add(showUI);
-
-Events.OnGameBoot.Add(initInfo);
