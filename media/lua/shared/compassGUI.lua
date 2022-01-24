@@ -18,6 +18,8 @@ local flag = true;
 local floor = math.floor;
 
 local tracker = 0;
+Player = getSpecificPlayer(0);
+
 -- ------------------------------------------------
 -- Functions
 -- ---------------------------------------------
@@ -102,12 +104,12 @@ end
 ---
 -- Creates a small overlay UI that shows debug info if the
 -- [ key is pressed.
+
 local function getTargetInfo()
 	Target = getSpecificPlayer(tracker);
 
-	Player = getSpecificPlayer(0);
 	PlayerX = Player:getX();
-	PlayerY = Player:getY();	
+	PlayerY = Player:getY();
 
 	if Target then
 		TargetX = Target:getX();
@@ -117,7 +119,7 @@ local function getTargetInfo()
 	else
 		TargetX = "NULL";
 		TargetY = "NULL";
-		TargetUsername = "player(" .. tracker .. ")";
+		TargetUsername = "player " .. tracker+1;
 	end
 end
 
@@ -200,6 +202,5 @@ local function showUI()
 end
 
 Events.OnKeyPressed.Add(checkKey);
-Events.EveryOneMinute.Add(getTargetInfo);
+Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
-Events.OnMainMenuEnter.Remove(showUI);
