@@ -103,14 +103,14 @@ local function OnScoreboardUpdate(usernames, displayNames, steamIDs)
 	for i = 0,usernames:size()-1 do
         local username = usernames:get(i);
         local displayName = displayNames:get(i);
-		print(username);
-		print(displayName);
 	end
 end
 
 local function getTargetInfo()
 	Target = getSpecificPlayer(tracker);
 	Player = getSpecificPlayer(0);
+
+	print(getOnlinePlayers())
 
 	PlayerX = Player:getX();
 	PlayerY = Player:getY();
@@ -123,7 +123,7 @@ local function getTargetInfo()
 	else
 		TargetX = "NULL";
 		TargetY = "NULL";
-		TargetUsername = "player " .. tracker+1;
+		TargetUsername = "player " + tracker+1;
 	end
 end
 
@@ -131,9 +131,6 @@ end
 -- Creates a small overlay UI that shows debug info if the
 -- [ key is pressed.
 local function showUI()
-
-	print(players);
-
 	if Player and flag then
 		local room = Player:getCurrentSquare():getRoom();
 		local roomTxt;
@@ -207,11 +204,12 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " + TargetUsername + ".", 1, 1, 1, 1)
 	end
 end
 
 Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
-Events.OnScoreboardUpdate.Add(OnScoreboardUpdate)
+Events.OnScoreboardUpdate.Add(OnScoreboardUpdate);
+Events.EnterMainMenu.Remove(showUI);
