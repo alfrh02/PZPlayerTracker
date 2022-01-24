@@ -34,6 +34,9 @@ local function checkKey(key)
 	-- up and down to change tracker
 	if (key == 200 and flag) then
 		tracker = tracker+1;
+		if (tracker > 1) then
+			tracker = 0;
+		end
 	end
 	if (key == 208 and flag) then
 		tracker = tracker-1
@@ -122,7 +125,11 @@ local function getTargetInfo()
 
 	local players = getOnlinePlayers();
 	if players and gameStarted then
-		Target = players:get(tracker);
+		if players:get(tracker) then
+			Target = players:get(tracker)
+		else
+			Target = getSpecificPlayer(0);
+		end
 		if Player:getUsername() ~= players:get(hunterNumber):getUsername() then
 			flag = false
 		end
@@ -148,6 +155,7 @@ end
 -- [ key is pressed.
 local function showUI()
 	if Player and flag then
+		--[[
 		local room = Player:getCurrentSquare():getRoom();
 		local roomTxt;
 		if room then
@@ -156,15 +164,15 @@ local function showUI()
 		else
 			roomTxt = "outside";
 		end
-
+		]]
 		local strings = {
 			"You are here:",
 			"X: " .. round(PlayerX),
 			"Y: " .. round(PlayerY),
 			"",
 			"",
-			"Current Room: ",
-			roomTxt,
+			--"Current Room: ",
+			--roomTxt,
 		};
 
 		local txt;
@@ -174,7 +182,8 @@ local function showUI()
 		end
 	end
 	if Player and flag and Target then
-		local room = Target:getCurrentSquare():getRoom();
+		--[[
+		local room = Target:getCurrentSquare():getRoom(); --
 		local roomTxt;
 		if room then
 			local roomName = Target:getCurrentSquare():getRoom():getName();
@@ -182,15 +191,15 @@ local function showUI()
 		else
 			roomTxt = "outside";
 		end
-
+		]]--
 		local strings = {
 			"Your target is here:",
 			"X: " .. round(TargetX),
 			"Y: " .. round(TargetY),
 			"",
 			"",
-			"Current Room: ",
-			roomTxt,
+			--"Current Room: ",
+			--roomTxt,
 		}
 
 		local txt;
@@ -209,13 +218,25 @@ local function showUI()
 			"Y: --",
 			"",
 			"",
-			"Current Room: ",
-			"--",
+			--"Current Room: ",
+			--"--",
 		}
 
 		local txt;
 		for i = 1, #strings do
 			txt = strings[i];
+			Player = getSpecificPlayer(0);
+			Target = getSpecificPlayer(0);
+		
+			local players = getOnlinePlayers();
+			if players and gameStarted then
+				Target = players:get(tracker);
+				if Player:getUsername() ~= players:get(hunterNumber):getUsername() then
+					flag = false
+				end
+			end
+		
+			PlayerX = Player:getX();
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 
