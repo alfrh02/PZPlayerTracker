@@ -123,7 +123,7 @@ local function getTargetInfo()
 	else
 		TargetX = "NULL";
 		TargetY = "NULL";
-		TargetUsername = "player " + tracker+1;
+		TargetUsername = "player " .. tracker+1;
 	end
 end
 
@@ -204,7 +204,7 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " + TargetUsername + ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 	end
 end
 
