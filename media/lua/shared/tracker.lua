@@ -104,10 +104,10 @@ end
 -- W.I.P.
 --
 Target = getSpecificPlayer(0);
-local function OnServerStarted()
+local function EveryOneMinute()
 	local variable = getOnlinePlayers();
 	Target = variable:get(tracker);
-	if Target[1] and flag2 then
+	if getOnlinePlayers().size > 1 and flag2 then
 		Hunter = Target[0]:getUsername(); --player 1 is assigned as "Hunter"
 		Hunted = Target[1]:getUsername(); --player 2 is assigned as "Hunted"
 		flag2 = false;
@@ -139,89 +139,80 @@ end
 -- Creates the text overlay to display coordinates+. Dependent on flag returning true, which is toggled by the "[" or "ESC" keys as defined in checkKey() above.
 -- 
 local function showUI()
-	local huntee 
-	if Hunted == getSpecificPlayer(0):getUsername() then
-		huntee = true;
-	else
-		huntee = false;
+	if Player and flag then
+		local room = Player:getCurrentSquare():getRoom();
+		local roomTxt;
+		if room then
+			local roomName = Player:getCurrentSquare():getRoom():getName();
+			roomTxt = roomName;
+		else
+			roomTxt = "outside";
+		end
+
+		local strings = {
+			"You are here:",
+			"X: " .. round(PlayerX),
+			"Y: " .. round(PlayerY),
+			"",
+			"",
+			"Current Room: ",
+			roomTxt,
+		};
+
+		local txt;
+		for i = 1, #strings do
+			txt = strings[i];
+			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
+		end
 	end
-
-	if not huntee then
-		if Player and flag then
-			local room = Player:getCurrentSquare():getRoom();
-			local roomTxt;
-			if room then
-				local roomName = Player:getCurrentSquare():getRoom():getName();
-				roomTxt = roomName;
-			else
-				roomTxt = "outside";
-			end
-
-			local strings = {
-				"You are here:",
-				"X: " .. round(PlayerX),
-				"Y: " .. round(PlayerY),
-				"",
-				"",
-				"Current Room: ",
-				roomTxt,
-			};
-
-			local txt;
-			for i = 1, #strings do
-				txt = strings[i];
-				T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
-			end
+	if Player and flag and Target then
+		local room = Target:getCurrentSquare():getRoom();
+		local roomTxt;
+		if room then
+			local roomName = Target:getCurrentSquare():getRoom():getName();
+			roomTxt = roomName;
+		else
+			roomTxt = "outside";
 		end
-		if Player and flag and Target then
-			local room = Target:getCurrentSquare():getRoom();
-			local roomTxt;
-			if room then
-				local roomName = Target:getCurrentSquare():getRoom():getName();
-				roomTxt = roomName;
-			else
-				roomTxt = "outside";
-			end
 
-			local strings = {
-				"Your target is here:",
-				"X: " .. round(TargetX),
-				"Y: " .. round(TargetY),
-				"",
-				"",
-				"Current Room: ",
-				roomTxt,
-			}
+		local strings = {
+			"Your target is here:",
+			"X: " .. round(TargetX),
+			"Y: " .. round(TargetY),
+			"",
+			"",
+			"Current Room: ",
+			roomTxt,
+		}
 
-			local txt;
-			for i = 1, #strings do
-				txt = strings[i];
-				T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
-			end
-
-			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
-			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		local txt;
+		for i = 1, #strings do
+			txt = strings[i];
+			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
-		if Player and flag and not Target then
-			local strings = {
-				"Your target is here:",
-				"X: --",
-				"Y: --",
-				"",
-				"",
-				"Current Room: ",
-				"--",
-			}
 
-			local txt;
-			for i = 1, #strings do
-				txt = strings[i];
-				T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
-			end
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+	end
+	if Player and flag and not Target then
+		local strings = {
+			"Your target is here:",
+			"X: --",
+			"Y: --",
+			"",
+			"",
+			"Current Room: ",
+			"--",
+		}
 
-			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
-			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		local txt;
+		for i = 1, #strings do
+			txt = strings[i];
+			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
+
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 	end
 end
 
@@ -238,4 +229,6 @@ Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
 --Events.EveryOneMinute.Add(Debugfunc);
-Events.OnServerStarted.Add(OnServerStarted);
+if isServer() then
+	Events.EveryOneMinute.Add(EveryOneMinute);
+end
