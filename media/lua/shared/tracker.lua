@@ -99,18 +99,23 @@ local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
     return Pointer;
 end
 
+local gameStarted = false;
+local function OnGameStart()
+	gameStarted = true; 
+end
+
 local function getTargetInfo()
 	Player = getSpecificPlayer(0);
 	Target = getSpecificPlayer(0);
 
 	local players = getOnlinePlayers();
-	if players then
-		Target = players:get(tracker);
+	if players and gameStarted then
+		--Target = players:get(tracker);
 		if Player:getUsername() ~= players:get(0):getUsername() then
 			flag = false
 		end
 	end
-	
+
 	PlayerX = Player:getX();
 	PlayerY = Player:getY();
 
@@ -220,3 +225,4 @@ Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
 --Events.EveryOneMinute.Add(Debugfunc);
 Events.OnServerStarted.Add(OnServerStarted);
+Events.OnGameStart.Add(OnGameStart)
