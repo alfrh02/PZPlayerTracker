@@ -18,7 +18,6 @@ local flag = true;
 local floor = math.floor;
 
 local tracker = 0;
-Player = getSpecificPlayer(0);
 
 -- ------------------------------------------------
 -- Functions
@@ -107,6 +106,7 @@ end
 
 local function getTargetInfo()
 	Target = getSpecificPlayer(tracker);
+	Player = getSpecificPlayer(0);
 
 	PlayerX = Player:getX();
 	PlayerY = Player:getY();
