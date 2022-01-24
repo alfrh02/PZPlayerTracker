@@ -68,40 +68,45 @@ local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
 
     --POSITIVE DEGREES
     if rotation > -22.5 and rotation < 22.5 then
-        Pointer = "WEST"
+        Pointer = "WEST (top left)"
     end
     if rotation > 22.5 and rotation < 67.5 then
-        Pointer = "NORTH_WEST"
+        Pointer = "NORTH_WEST (up)"
     end
     if rotation > 67.5 and rotation < 112.5 then
-        Pointer = "NORTH"
+        Pointer = "NORTH (top right)"
     end
     if rotation > 112.5 and rotation < 157.5 then
-        Pointer = "NORTH-EAST"
+        Pointer = "NORTH-EAST (right)"
     end
     if rotation > 157.5 and rotation <= 180 then
-        Pointer = "EAST"
+        Pointer = "EAST (bottom right)"
     end
 
     --NEGATIVE DEGREES
     if rotation < -22.5 and rotation > -67.5 then
-        Pointer = "SOUTH-WEST"
+        Pointer = "SOUTH-WEST (left)"
     end
     if rotation < -67.5 and rotation > -112.5 then
-        Pointer = "SOUTH"
+        Pointer = "SOUTH (bottom left)"
     end
     if rotation < -112.5 and rotation > -157.5 then
-        Pointer = "SOUTH-EAST"
+        Pointer = "SOUTH-EAST (down)"
     end
     if rotation < -157.5 and rotation > -180 then
-        Pointer = "EAST"
+        Pointer = "EAST (bottom right)"
     end
     return Pointer;
 end
 
+local function OnServerStarted()
+	local variable = getOnlinePlayers();
+	Target = variable:get(tracker);
+end
+
 local function getTargetInfo()
-	Target = getSpecificPlayer(tracker);
 	Player = getSpecificPlayer(0);
+	Target = getSpecificPlayer(0);
 
 	PlayerX = Player:getX();
 	PlayerY = Player:getY();
@@ -199,12 +204,16 @@ local function showUI()
 	end
 end
 
+--[[
 function Debugfunc()
 	local variable = getOnlinePlayers();
-	print(variable[1]);
+	local player1 = variable:get(1)
+	print(player1:getX());
 end
+]]--
 
 Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
-Events.EveryOneMinute.Add(Debugfunc);
+--Events.EveryOneMinute.Add(Debugfunc);
+Events.OnServerStarted.Add(OnServerStarted);
