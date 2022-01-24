@@ -110,7 +110,7 @@ local function getTargetInfo()
 
 	local players = getOnlinePlayers();
 	if players and gameStarted then
-		--Target = players:get(tracker);
+		Target = players:get(tracker);
 		if Player:getUsername() ~= players:get(0):getUsername() then
 			flag = false
 		end
