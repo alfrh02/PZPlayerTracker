@@ -18,7 +18,6 @@ local flag = true;
 local floor = math.floor;
 
 local tracker = 0;
-
 -- ------------------------------------------------
 -- Functions
 -- ---------------------------------------------
@@ -100,9 +99,14 @@ local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
     return Pointer;
 end
 
----
--- Creates a small overlay UI that shows debug info if the
--- [ key is pressed.
+local function OnScoreboardUpdate(usernames, displayNames, steamIDs)
+	for i = 0,usernames:size()-1 do
+        local username = usernames:get(i);
+        local displayName = displayNames:get(i);
+		print(username);
+		print(displayName);
+	end
+end
 
 local function getTargetInfo()
 	Target = getSpecificPlayer(tracker);
@@ -123,7 +127,13 @@ local function getTargetInfo()
 	end
 end
 
+---
+-- Creates a small overlay UI that shows debug info if the
+-- [ key is pressed.
 local function showUI()
+
+	print(players);
+
 	if Player and flag then
 		local room = Player:getCurrentSquare():getRoom();
 		local roomTxt;
@@ -204,3 +214,4 @@ end
 Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
+Events.OnScoreboardUpdate.Add(OnScoreboardUpdate)
