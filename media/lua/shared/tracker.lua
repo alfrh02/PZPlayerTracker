@@ -4,6 +4,7 @@
 --**                Happy Hunting                 **
 --**************************************************
 
+--[[
 local function calculateDistance(x1,y1,x2,y2)
     local i = (x2 - x1) * (x2 - x1);
     local y = (y2 - y1) * (y2 - y1);
@@ -77,3 +78,4 @@ local function trackPlayer()
 end
 
 Events.OnPlayerMove.Add(trackPlayer)
+]]--
