@@ -105,7 +105,7 @@ local function showUI()
 	local target = getSpecificPlayer(tracker);
 
 	if player and flag then
-
+        --SendCommandToServer("/godmod alfred");
 		local playerX = player:getX();
 		local playerY = player:getY();
 	
@@ -136,7 +136,7 @@ local function showUI()
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 	end
-	if target and flag then
+	if player and target and flag then
 
 		local playerX = player:getX();
 		local playerY = player:getY();
@@ -175,7 +175,7 @@ local function showUI()
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, direction, 1, 1, 1, 1);
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. target:getUsername(), 1, 1, 1, 1)
 	end
-	if not target and flag then
+	if player and not target and flag then
 		local targetX = 0
 		local targetY = 0
 
