@@ -8,6 +8,7 @@
 --**           "Coordinate Viewer" mod.           **
 --**************************************************
 
+--[[
 local FONT_SMALL = UIFont.Small;
 local T_MANAGER = getTextManager();
 
