@@ -18,7 +18,6 @@ local flag = true;
 local floor = math.floor;
 
 local tracker = 0;
-local hunterNumber = 0;
 -- ------------------------------------------------
 -- Functions
 -- ---------------------------------------------
@@ -45,6 +44,7 @@ local function checkKey(key)
 		end
 	end
 	-- left and right to change hunter
+	--[[
 	if (key == 205) then
 		hunterNumber = hunterNumber+1
 	end
@@ -54,6 +54,7 @@ local function checkKey(key)
 			hunterNumber = 0;
 		end
 	end
+	]]--
 end
 ---
 -- Round up if decimal is higher than 0.5 and down if it is smaller.
@@ -130,7 +131,7 @@ local function getTargetInfo()
 		else
 			Target = getSpecificPlayer(0);
 		end
-		if Player:getUsername() ~= players:get(hunterNumber):getUsername() then
+		if Player:getUsername() ~= players:get(0):getUsername() then
 			flag = false
 		end
 	end
@@ -225,17 +226,6 @@ local function showUI()
 		local txt;
 		for i = 1, #strings do
 			txt = strings[i];
-			Player = getSpecificPlayer(0);
-			Target = getSpecificPlayer(0);
-		
-			local players = getOnlinePlayers();
-			if players and gameStarted then
-				Target = players:get(tracker);
-				if Player:getUsername() ~= players:get(hunterNumber):getUsername() then
-					flag = false
-				end
-			end
-		
 			PlayerX = Player:getX();
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
