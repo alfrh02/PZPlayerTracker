@@ -103,8 +103,6 @@ local function getTargetInfo()
 	Target = getSpecificPlayer(tracker);
 	Player = getSpecificPlayer(0);
 
-	print(getOnlinePlayers())
-
 	PlayerX = Player:getX();
 	PlayerY = Player:getY();
 
@@ -197,11 +195,15 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. "TargetUsername" .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 	end
+end
+
+function Debugfunc()
+	print(getOnlinePlayers())
 end
 
 Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
-Events.EnterMainMenu.Remove(showUI);
+Events.EveryOneMinute.Add(Debugfunc);
