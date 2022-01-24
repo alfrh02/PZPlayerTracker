@@ -1,5 +1,5 @@
 --**************************************************
---**                PLAYER TRACKER                **
+--**                player TRACKER                **
 --**              by Alfred/alfrh02 :-)           **
 --**                happy hunting.                **
 --**************************************************
@@ -7,6 +7,7 @@
 --**       the base of this code from their       **
 --**           "Coordinate Viewer" mod.           **
 --**************************************************
+print("Loaded player Tracker by alfrh02/alfred.")
 
 local FONT_SMALL = UIFont.Small;
 local T_MANAGER = getTextManager();
@@ -18,14 +19,25 @@ local flag = true;
 local floor = math.floor;
 
 local tracker = 0;
--- ------------------------------------------------
--- Functions
--- ---------------------------------------------
----
--- Checks if the [ key is pressed to activate / deactivate the
--- debug menu.
--- @param _key - The key which was pressed by the Player.
------
+local player = getSpecificplayer(0);
+local playerUsername = player:getUsername();
+
+local target = getSpecificplayer(0);
+
+local targetX = "NULL";
+local targetY = "NULL";
+
+local playerX = "NULL";
+local playerY = "NULL";
+
+local function round(num)
+	if num == "NULL" then
+		return "NULL";
+	end
+	local number = num;
+	return number <= 0 and floor(number) or floor(number + 0.5);
+end
+
 local function checkKey(key)
 	if (key == 26 or key == 1) then
 		flag = not flag; -- reverse flag
@@ -40,17 +52,6 @@ local function checkKey(key)
 		end
 	end
 end
----
--- Round up if decimal is higher than 0.5 and down if it is smaller.
--- @param num
---
-local function round(num)
-	if num == "NULL" then
-		return "NULL";
-	end
-	local number = num;
-	return number <= 0 and floor(number) or floor(number + 0.5);
-end
 
 local function calculateRotation(x1,y1,x2,y2)
     local delta_x = x2 - x1
@@ -59,14 +60,11 @@ local function calculateRotation(x1,y1,x2,y2)
     return(math.deg(radians))
 end
 
----
--- return what direction the target is at
---
-local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
+local function degreeTrack(targetX,targetY,playerX,playerY)
     Pointer = "NULL"
-    local rotation = calculateRotation(targetX,targetY,PlayerX,PlayerY)
+    local rotation = calculateRotation(targetX,targetY,playerX,playerY)
 
-    --POSITIVE DEGREES
+    --POSITIVE DEGREES (right)
     if rotation > -22.5 and rotation < 22.5 then
         Pointer = "WEST (top left)"
     end
@@ -83,7 +81,7 @@ local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
         Pointer = "EAST (bottom right)"
     end
 
-    --NEGATIVE DEGREES
+    --NEGATIVE DEGREES (left)
     if rotation < -22.5 and rotation > -67.5 then
         Pointer = "SOUTH-WEST (left)"
     end
@@ -99,42 +97,33 @@ local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
     return Pointer;
 end
 
-local function getTargetInfo()
-	Player = getSpecificPlayer(0);
-	Target = getSpecificPlayer(0);
+local function gettargetInfo()
+	playerX = player:getX();
+	playerY = player:getY();
 
-	local players = getOnlinePlayers();
-	if players then
-		Target = players:get(tracker);
-		if Player:getUsername() ~= players:get(0):getUsername() then
-			flag = false
-		end
-	end
-	
-	PlayerX = Player:getX();
-	PlayerY = Player:getY();
+    if isServer() then
+        local variable = getOnlinePlayers();
+	    target = variable:get(tracker);
+    end
 
-	if Target then
-		TargetX = Target:getX();
-		TargetY = Target:getY();
-		TargetUsername = Target:getUsername();
-		Direction = degreeTrack(TargetX,TargetY,PlayerX,PlayerY);
+	if target then
+		targetX = target:getX();
+        targetY = target:getY();
+		targetUsername = target:getUsername();
+		Direction = degreeTrack(targetX,targetY,playerX,playerY);
 	else
-		TargetX = "NULL";
-		TargetY = "NULL";
-		TargetUsername = "player " .. tracker+1;
+		targetX = "NULL";
+		targetY = "NULL";
+		targetUsername = "player " .. tracker+1;
 	end
 end
 
----
--- Creates a small overlay UI that shows debug info if the
--- [ key is pressed.
 local function showUI()
-	if Player and flag then
-		local room = Player:getCurrentSquare():getRoom();
+	if player and flag then
+		local room = player:getCurrentSquare():getRoom();
 		local roomTxt;
 		if room then
-			local roomName = Player:getCurrentSquare():getRoom():getName();
+			local roomName = player:getCurrentSquare():getRoom():getName();
 			roomTxt = roomName;
 		else
 			roomTxt = "outside";
@@ -142,8 +131,8 @@ local function showUI()
 
 		local strings = {
 			"You are here:",
-			"X: " .. round(PlayerX),
-			"Y: " .. round(PlayerY),
+			"X: " .. round(playerX),
+			"Y: " .. round(playerY),
 			"",
 			"",
 			"Current Room: ",
@@ -156,11 +145,12 @@ local function showUI()
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 	end
-	if Player and flag and Target then
-		local room = Target:getCurrentSquare():getRoom();
+
+	if player and flag and target then
+		local room = target:getCurrentSquare():getRoom();
 		local roomTxt;
 		if room then
-			local roomName = Target:getCurrentSquare():getRoom():getName();
+			local roomName = target:getCurrentSquare():getRoom():getName();
 			roomTxt = roomName;
 		else
 			roomTxt = "outside";
@@ -168,8 +158,8 @@ local function showUI()
 
 		local strings = {
 			"Your target is here:",
-			"X: " .. round(TargetX),
-			"Y: " .. round(TargetY),
+			"X: " .. round(targetX),
+			"Y: " .. round(targetY),
 			"",
 			"",
 			"Current Room: ",
@@ -183,9 +173,10 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. targetUsername .. ".", 1, 1, 1, 1)
 	end
-	if Player and flag and not Target then
+
+	if player and flag and not target then
 		local strings = {
 			"Your target is here:",
 			"X: --",
@@ -203,20 +194,11 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. targetUsername .. ".", 1, 1, 1, 1)
 	end
 end
 
---[[
-function Debugfunc()
-	local players = getOnlinePlayers();
-	local player1 = players:get(1)
-	print(player1:getX());
-end
-]]--
-
 Events.OnKeyPressed.Add(checkKey);
-Events.OnTickEvenPaused.Add(getTargetInfo);
-Events.OnPostUIDraw.Add(showUI);
+Events.OnTickEvenPaused.Add(gettargetInfo);
 --Events.EveryOneMinute.Add(Debugfunc);
-Events.OnServerStarted.Add(OnServerStarted);
+Events.OnPostUIDraw.Add(showUI);
