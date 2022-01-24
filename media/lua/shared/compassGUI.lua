@@ -1,11 +1,12 @@
--- =============================================================================
--- COORDINATE VIEWER
--- by RoboMat & Turbotutone
--- 
--- Created: 07.08.13 - 21:31
---
--- Not my most elegant code, but it works :D
--- =============================================================================
+--**************************************************
+--**                PLAYER TRACKER                **
+--**              by Alfred/alfrh02 :-)           **
+--**                happy hunting.                **
+--**************************************************
+--**  Thanks to RoboMat & Turbotutone - I ripped  **
+--**       the base of this code from their       **
+--**           "Coordinate Viewer" mod.           **
+--**************************************************
 
 local FONT_SMALL = UIFont.Small;
 local T_MANAGER = getTextManager();
@@ -16,21 +17,30 @@ local SCREEN_Y = 1080/2;
 local flag = true;
 local floor = math.floor;
 
+local tracker = 0;
+
 -- ------------------------------------------------
 -- Functions
--- ------------------------------------------------
+-- ---------------------------------------------
 ---
 -- Checks if the [ key is pressed to activate / deactivate the
 -- debug menu.
 -- @param _key - The key which was pressed by the player.
---
-local function checkKey(_key)
-	local key = _key;
-	if key == 26 then
+-----
+local function checkKey(key)
+	if (key == 26 or key == 1) then
 		flag = not flag; -- reverse flag
 	end
+	if (key == 200) then
+		tracker = tracker+1;
+	end
+	if (key == 208) then
+		tracker = tracker-1
+		if (tracker < 0) then
+			tracker = 0;
+		end
+	end
 end
-
 ---
 -- Round up if decimal is higher than 0.5 and down if it is smaller.
 -- @param _num
@@ -50,9 +60,9 @@ end
 ---
 -- return what direction the target is at
 --
-local function degreeTrack(playerX,playerY,targetX,targetY)
+local function degreeTrack(targetX,targetY,playerX,playerY)
     Pointer = "NULL"
-    local rotation = calculateRotation(playerX,playerY,targetX,targetY)
+    local rotation = calculateRotation(targetX,targetY,playerX,playerY)
 
     --POSITIVE DEGREES
     if rotation > -22.5 and rotation < 22.5 then
@@ -92,16 +102,14 @@ end
 -- [ key is pressed.
 local function showUI()
 	local player = getSpecificPlayer(0);
-	local target = getSpecificPlayer(1)
+	local target = getSpecificPlayer(tracker);
 
 	if player and flag then
-		-- Absolute Coordinates.
-		local absX = player:getX();
-		local absY = player:getY();
 
-		local targetX = target:getX()
-		local targetY = target:getX()
+		local playerX = player:getX();
+		local playerY = player:getY();
 	
+		----------------------------------------[[player]]----------------------------------------
 		-- Detect room.
 		local room = player:getCurrentSquare():getRoom();
 		local roomTxt;
@@ -114,12 +122,12 @@ local function showUI()
 
 		local strings = {
 			"You are here:",
-			"X: " .. round(absX),
-			"Y: " .. round(absY),
+			"X: " .. round(playerX),
+			"Y: " .. round(playerY),
 			"",
 			"",
 			"Current Room: ",
-			"" .. roomTxt,
+			roomTxt,
 		};
 
 		local txt;
@@ -127,8 +135,16 @@ local function showUI()
 			txt = strings[i];
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
+	end
+	if target and flag then
 
-		
+		local playerX = player:getX();
+		local playerY = player:getY();
+
+		local targetX = target:getX()
+		local targetY = target:getY()
+
+		----------------------------------------[[target]]----------------------------------------
 		local targetRoomName = target:getCurrentSquare():getRoom();
 		local targetRoomTxt;
 		if targetRoomName then
@@ -139,25 +155,52 @@ local function showUI()
 		end
 		
 
-		local targetstrings = {
+		local strings = {
 			"Your target is here:",
 			"X: " .. round(targetX),
 			"Y: " .. round(targetY),
 			"",
 			"",
 			"Current Room: ",
-			"" .. targetRoomTxt,
+			targetRoomTxt,
 		};
 
-		local targettxt;
-		for i = 1, #targetstrings do
-			targettxt = targetstrings[i];
-			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), targettxt, 1, 1, 1, 1);
+		local txt;
+		for i = 1, #strings do
+			txt = strings[i];
+			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
-		local direction = "Your target is " .. degreeTrack(absX,absY,targetX,targetY)
+
+		local direction = "Your target is " .. degreeTrack(targetX,targetY,playerX,playerY) .. "."
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, direction, 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. target:getUsername(), 1, 1, 1, 1)
+	end
+	if not target and flag then
+		local targetX = 0
+		local targetY = 0
+
+		----------------------------------------[[null]]----------------------------------------		
+		local strings = {
+			"Your target is here:",
+			"X: " .. round(targetX),
+			"Y: " .. round(targetY),
+			"",
+			"",
+			"Current Room: ",
+			"NULL" ,
+		};
+
+		local txt;
+		for i = 1, #strings do
+			txt = strings[i];
+			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
+		end
+		
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL", 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking NULL", 1, 1, 1, 1)
 	end
 end
 
 Events.OnKeyPressed.Add(checkKey);
 Events.OnPostUIDraw.Add(showUI);
+Events.OnMainMenuEnter.Remove(showUI);

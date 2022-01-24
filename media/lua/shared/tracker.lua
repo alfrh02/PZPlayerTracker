@@ -25,7 +25,7 @@ end
 
 local function degreeTrack(playerX,playerY,targetX,targetY)
     Pointer = "NULL"
-    local rotation = calculateRotation(playerX,playerY,targetX,targetY)
+    local rotation = calculateRotation(targetX,targetY,playerX,playerY)
 
     --POSITIVE DEGREES
     if rotation > -22.5 and rotation < 22.5 then
@@ -66,8 +66,8 @@ local function trackPlayer()
     local y = player:getY()
     
     local target = getSpecificPlayer(1)
-    local targetX = 100 --target:getX()
-    local targetY = 100 --target:getX()
+    local targetX = 10700 --target:getX()
+    local targetY = 9400 --target:getX()
     --print(compassTrack(round(x),round(y),targetX,targetY))
     --print(calculateDistance(round(x),round(y),targetX,targetY))
     print(round(calculateRotation(round(x),round(y),targetX,targetY)))
