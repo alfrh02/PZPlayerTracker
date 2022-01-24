@@ -106,7 +106,7 @@ local function showUI()
 
 	if player and flag then
         --SendCommandToServer("/godmod alfred");
-		local playerX = player:getX();
+	local playerX = player:getX();
 		local playerY = player:getY();
 	
 		----------------------------------------[[player]]----------------------------------------
@@ -202,5 +202,6 @@ local function showUI()
 end
 
 Events.OnKeyPressed.Add(checkKey);
+Events.OnPlayerMove.Add(showUI);
 Events.OnPostUIDraw.Add(showUI);
 Events.OnMainMenuEnter.Remove(showUI);
