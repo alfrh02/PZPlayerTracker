@@ -200,7 +200,8 @@ local function showUI()
 end
 
 function Debugfunc()
-	print(getOnlinePlayers())
+	local variable = getOnlinePlayers();
+	print(variable[1]);
 end
 
 Events.OnKeyPressed.Add(checkKey);
