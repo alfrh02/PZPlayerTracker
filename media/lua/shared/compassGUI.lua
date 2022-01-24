@@ -99,13 +99,6 @@ local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
     return Pointer;
 end
 
-local function OnScoreboardUpdate(usernames, displayNames, steamIDs)
-	for i = 0,usernames:size()-1 do
-        local username = usernames:get(i);
-        local displayName = displayNames:get(i);
-	end
-end
-
 local function getTargetInfo()
 	Target = getSpecificPlayer(tracker);
 	Player = getSpecificPlayer(0);
@@ -204,12 +197,11 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is NULL.", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. "TargetUsername" .. ".", 1, 1, 1, 1)
 	end
 end
 
 Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
-Events.OnScoreboardUpdate.Add(OnScoreboardUpdate);
 Events.EnterMainMenu.Remove(showUI);

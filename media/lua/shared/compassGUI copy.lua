@@ -117,7 +117,8 @@ local function showUI()
 		local playerY = player:getY();
 	
 		----------------------------------------[[player]]----------------------------------------
-		-- Detect room.
+		-- Detect room. 
+		--[[
 		local room = player:getCurrentSquare():getRoom();
 		local roomTxt;
 		if room then
@@ -149,6 +150,7 @@ local function showUI()
 		local playerY = player:getY();
 
 		----------------------------------------[[target]]----------------------------------------
+		--[[
 		local targetRoomName = Target:getCurrentSquare():getRoom();
 		local targetRoomTxt;
 		if targetRoomName then
@@ -184,6 +186,7 @@ local function showUI()
 		local targetY = 0
 
 		----------------------------------------[[null]]----------------------------------------		
+		--[[
 		local strings = {
 			"Your target is here:",
 			"X: " .. round(targetX),
@@ -209,3 +212,4 @@ Events.OnKeyPressed.Add(checkKey);
 Events.OnPlayerMove.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
 Events.OnMainMenuEnter.Remove(showUI);
+]]
