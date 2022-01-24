@@ -18,6 +18,7 @@ local flag = true;
 local floor = math.floor;
 
 local tracker = 0;
+local hunterNumber = 0;
 -- ------------------------------------------------
 -- Functions
 -- ---------------------------------------------
@@ -30,13 +31,24 @@ local function checkKey(key)
 	if (key == 26 or key == 1) then
 		flag = not flag; -- reverse flag
 	end
-	if (key == 200) then
+	-- up and down to change tracker
+	if (key == 200 and flag) then
 		tracker = tracker+1;
 	end
-	if (key == 208) then
+	if (key == 208 and flag) then
 		tracker = tracker-1
 		if (tracker < 0) then
 			tracker = 0;
+		end
+	end
+	-- left and right to change hunter
+	if (key == 205) then
+		hunterNumber = hunterNumber+1
+	end
+	if (key == 203) then
+		hunterNumber = hunterNumber-1
+		if (hunterNumber<0) then
+			hunterNumber = 0;
 		end
 	end
 end
@@ -111,7 +123,7 @@ local function getTargetInfo()
 	local players = getOnlinePlayers();
 	if players and gameStarted then
 		Target = players:get(tracker);
-		if Player:getUsername() ~= players:get(0):getUsername() then
+		if Player:getUsername() ~= players:get(hunterNumber):getUsername() then
 			flag = false
 		end
 	end
@@ -224,5 +236,4 @@ Events.OnKeyPressed.Add(checkKey);
 Events.OnTickEvenPaused.Add(getTargetInfo);
 Events.OnPostUIDraw.Add(showUI);
 --Events.EveryOneMinute.Add(Debugfunc);
-Events.OnServerStarted.Add(OnServerStarted);
-Events.OnGameStart.Add(OnGameStart)
+Events.EveryOneMinute.Add(OnGameStart)
