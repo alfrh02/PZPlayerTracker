@@ -63,7 +63,7 @@ end
 local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
     local pointer = "NULL"
 
-	local radians = math.atan2(playerX - targetX, playerY - targetY)
+	local radians = math.atan2(PlayerX - targetX, PlayerY - targetY)
 	local rotation = math.deg(radians)
 
     			--POSITIVE DEGREES--
