@@ -29,7 +29,7 @@ local onlineConnected = false;
 -- @param _key - The key which was pressed by the Player.
 -----
 local function checkKey(key)
-	if key == 26 or key == 1 then
+	if key == 26 then --[
 		flag = not flag; -- reverse flag
 	end
 	if key == 200 then
@@ -41,7 +41,7 @@ local function checkKey(key)
 			tracker = 0;
 		end
 	end
-	if key == 199 then
+	if key == 199 then -- HOME
 		onlineConnected = true;
 	end
 end
@@ -130,23 +130,23 @@ end
 -- [ key is pressed.
 local function showUI()
 	if Player and flag then
-		local room = Player:getCurrentSquare():getRoom();
-		local roomTxt;
-		if room then
-			local roomName = Player:getCurrentSquare():getRoom():getName();
-			roomTxt = roomName;
-		else
-			roomTxt = "outside";
-		end
+		-- local room = Player:getCurrentSquare():getRoom();
+		-- local roomTxt;
+		-- if room then
+		-- 	local roomName = Player:getCurrentSquare():getRoom():getName();
+		-- 	roomTxt = roomName;
+		-- else
+		-- 	roomTxt = "outside";
+		-- end
 
 		local strings = {
 			"You are here:",
 			"X: " .. round(PlayerX),
 			"Y: " .. round(PlayerY),
 			"",
-			"",
-			"Current Room: ",
-			roomTxt,
+			-- "",
+			-- "Current Room: ",
+			-- roomTxt,
 		};
 
 		local txt;
@@ -156,23 +156,23 @@ local function showUI()
 		end
 	end
 	if Player and flag and Target then
-		local room = Target:getCurrentSquare():getRoom();
-		local roomTxt;
-		if room then
-			local roomName = Target:getCurrentSquare():getRoom():getName();
-			roomTxt = roomName;
-		else
-			roomTxt = "outside";
-		end
+		-- local room = Target:getCurrentSquare():getRoom();
+		-- local roomTxt;
+		-- if room then
+		-- 	local roomName = Target:getCurrentSquare():getRoom():getName();
+		-- 	roomTxt = roomName;
+		-- else
+		-- 	roomTxt = "outside";
+		-- end
 
 		local strings = {
 			"Your target is here:",
 			"X: " .. round(TargetX),
 			"Y: " .. round(TargetY),
 			"",
-			"",
-			"Current Room: ",
-			roomTxt,
+			-- "",
+			-- "Current Room: ",
+			-- roomTxt,
 		}
 
 		local txt;
@@ -181,8 +181,8 @@ local function showUI()
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+50, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+70, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 	end
 	if Player and flag and not Target then
 		local strings = {
@@ -190,9 +190,9 @@ local function showUI()
 			"X: --",
 			"Y: --",
 			"",
-			"",
-			"Current Room: ",
-			"--",
+			-- "",
+			-- "Current Room: ",
+			-- "--",
 		}
 
 		local txt;
