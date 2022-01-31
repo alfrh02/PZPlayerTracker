@@ -63,7 +63,7 @@ end
 local function degreeTrack(targetX,targetY,PlayerX,PlayerY)
     local pointer = "NULL"
 
-	local radians = math.atan2(targetX - PlayerX, targetY - PlayerY)
+	local radians = math.atan2(PlayerY - targetY, PlayerX - targetX)
 	local rotation = math.deg(radians)
 
     			--POSITIVE DEGREES--
@@ -114,8 +114,8 @@ local function getTargetInfo()
 	PlayerY = Player:getY();
 
 	if Target then
-		TargetX = Target:getX();
-		TargetY = Target:getY();
+		TargetX = 10733;
+		TargetY = 9388;
 		TargetUsername = Target:getUsername();
 		Direction = degreeTrack(TargetX,TargetY,PlayerX,PlayerY);
 	else
@@ -130,23 +130,23 @@ end
 -- [ key is pressed.
 local function showUI()
 	if Player and flag then
-		-- local room = Player:getCurrentSquare():getRoom();
-		-- local roomTxt;
-		-- if room then
-		-- 	local roomName = Player:getCurrentSquare():getRoom():getName();
-		-- 	roomTxt = roomName;
-		-- else
-		-- 	roomTxt = "outside";
-		-- end
+		local room = Player:getCurrentSquare():getRoom();
+		local roomTxt;
+		if room then
+			local roomName = Player:getCurrentSquare():getRoom():getName();
+			roomTxt = roomName;
+		else
+			roomTxt = "outside";
+		end
 
 		local strings = {
 			"You are here:",
 			"X: " .. round(PlayerX),
 			"Y: " .. round(PlayerY),
 			"",
-			-- "",
-			-- "Current Room: ",
-			-- roomTxt,
+			"",
+			"Current Room: ",
+			roomTxt,
 		};
 
 		local txt;
@@ -156,23 +156,23 @@ local function showUI()
 		end
 	end
 	if Player and flag and Target then
-		-- local room = Target:getCurrentSquare():getRoom();
-		-- local roomTxt;
-		-- if room then
-		-- 	local roomName = Target:getCurrentSquare():getRoom():getName();
-		-- 	roomTxt = roomName;
-		-- else
-		-- 	roomTxt = "outside";
-		-- end
+		local room = Target:getCurrentSquare():getRoom();
+		local roomTxt;
+		if room then
+			local roomName = Target:getCurrentSquare():getRoom():getName();
+			roomTxt = roomName;
+		else
+			roomTxt = "outside";
+		end
 
 		local strings = {
 			"Your target is here:",
 			"X: " .. round(TargetX),
 			"Y: " .. round(TargetY),
 			"",
-			-- "",
-			-- "Current Room: ",
-			-- roomTxt,
+			"",
+			"Current Room: ",
+			roomTxt,
 		}
 
 		local txt;
@@ -181,8 +181,8 @@ local function showUI()
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+50, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+70, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 	end
 	if Player and flag and not Target then
 		local strings = {
@@ -190,9 +190,9 @@ local function showUI()
 			"X: --",
 			"Y: --",
 			"",
-			-- "",
-			-- "Current Room: ",
-			-- "--",
+			"",
+			"Current Room: ",
+			"--",
 		}
 
 		local txt;
