@@ -104,8 +104,11 @@ local function getTargetInfo()
 	Player = getSpecificPlayer(0);
 
 	if onlineConnected then
-		local players = getOnlinePlayers()
-		Target = players:get(1)
+		local players = getOnlinePlayers();
+		Target = players:get(1);
+		if Player == Target then
+			Target = players:get(0);
+		end
 	else
 		Target = getSpecificPlayer(0);
 	end
