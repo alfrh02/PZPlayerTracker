@@ -46,7 +46,7 @@ local function checkKey(key)
 			tracker = 0;
 		end
 	end
-	if key == 199 then-- home key
+	if key == 199 or key == 210 then -- home key
 		onlineConnected = true;
 		tracker = 1;
 	end
