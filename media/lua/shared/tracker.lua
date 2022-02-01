@@ -188,7 +188,7 @@ local function showUI()
 		end
 
 		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+50, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+80, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+70, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 		
 		-- centre text below the player. uses MeasureStringX() which returns length of text. length of text is then used to take away from the player's screen's width.
 		-- screenwidth / 2 - screenwidth * textlength / 2
