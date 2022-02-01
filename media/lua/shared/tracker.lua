@@ -108,7 +108,7 @@ local function getTargetInfo()
 	players = getOnlinePlayers();
 
 	if onlineConnected then
-		if players:size() == 0 then
+		if players:size() < 1 then
 			onlineConnected = false;
 		end
 		Target = players:get(tracker);
