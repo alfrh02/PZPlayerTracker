@@ -48,6 +48,7 @@ local function checkKey(key)
 	end
 	if key == 199 then-- home key
 		onlineConnected = true;
+		tracker = 1;
 	end
 end
 ---
@@ -107,7 +108,7 @@ local function getTargetInfo()
 	players = getOnlinePlayers();
 
 	if onlineConnected then
-		if players:size() < 1 then
+		if players:size() == 0 then
 			onlineConnected = false;
 		end
 		Target = players:get(tracker);
@@ -135,14 +136,14 @@ end
 -- [ key is pressed.
 local function showUI()
 	if player and flag then
-		local room = player:getCurrentSquare():getRoom();
-		local roomTxt;
-		if room then
-			local roomName = player:getCurrentSquare():getRoom():getName();
-			roomTxt = roomName;
-		else
-			roomTxt = "outside";
-		end
+		-- local room = player:getCurrentSquare():getRoom();
+		-- local roomTxt;
+		-- if room then
+		-- 	local roomName = player:getCurrentSquare():getRoom():getName();
+		-- 	roomTxt = roomName;
+		-- else
+		-- 	roomTxt = "outside";
+		-- end
 
 		local strings = {
 			"You are here:",
@@ -150,8 +151,8 @@ local function showUI()
 			"Y: " .. round(playerY),
 			"",
 			"",
-			"Current Room: ",
-			roomTxt,
+			-- "Current Room: ",
+			-- roomTxt,
 		};
 
 		local txt;
@@ -161,14 +162,14 @@ local function showUI()
 		end
 	end
 	if player and flag and Target then
-		local room = Target:getCurrentSquare():getRoom();
-		local roomTxt;
-		if room then
-			local roomName = Target:getCurrentSquare():getRoom():getName();
-			roomTxt = roomName;
-		else
-			roomTxt = "outside";
-		end
+		-- local room = Target:getCurrentSquare():getRoom();
+		-- local roomTxt;
+		-- if room then
+		-- 	local roomName = Target:getCurrentSquare():getRoom():getName();
+		-- 	roomTxt = roomName;
+		-- else
+		-- 	roomTxt = "outside";
+		-- end
 
 		local strings = {
 			"Your target is here:",
@@ -176,8 +177,8 @@ local function showUI()
 			"Y: " .. round(TargetY),
 			"",
 			"",
-			"Current Room: ",
-			roomTxt,
+			-- "Current Room: ",
+			-- roomTxt,
 		}
 
 		local txt;
@@ -186,8 +187,8 @@ local function showUI()
 			T_MANAGER:DrawString(FONT_SMALL, SCREEN_X+100, SCREEN_Y + (i * 10), txt, 1, 1, 1, 1);
 		end
 
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+100, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
-		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+130, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X, SCREEN_Y+50, "Your target is " .. Direction .. ".", 1, 1, 1, 1);
+		T_MANAGER:DrawString(FONT_SMALL, SCREEN_X,SCREEN_Y+80, "You are tracking " .. TargetUsername .. ".", 1, 1, 1, 1)
 		
 		-- centre text below the player. uses MeasureStringX() which returns length of text. length of text is then used to take away from the player's screen's width.
 		-- screenwidth / 2 - screenwidth * textlength / 2
@@ -207,15 +208,15 @@ local function showUI()
 
 	end
 	if player and flag and not Target then
-		local strings = {
-			"Your target is here:",
-			"X: --",
-			"Y: --",
-			"",
-			"",
-			"Current Room: ",
-			"--",
-		}
+		-- local strings = {
+		-- 	"Your target is here:",
+		-- 	"X: --",
+		-- 	"Y: --",
+		-- 	"",
+		-- 	"",
+		-- 	"Current Room: ",
+		-- 	"--",
+		-- }
 
 		local txt;
 		for i = 1, #strings do
