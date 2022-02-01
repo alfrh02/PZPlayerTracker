@@ -1,4 +1,4 @@
 name=Player Tracker
 poster=poster.png
 id=playertracker
-description=Adds a basic UI element for players to be able to track each other. Also includes the setting to use a manhunt variant where only one player can use the tracker.
+description=Adds a basic UI element for players to be able to track each other.
